@@ -85,14 +85,14 @@ class Cursor(object):
 
 if __name__ == "__main__":
 
-    connection = apsw.Connection("dbfile")
+    connection = apsw.Connection(":memory:")
     cursor = connection.cursor()
 
     connection.createmodule("processsource", ProcessSource())
     connection.createmodule("portssource", PortsSource())
 
-    cursor.execute("DROP TABLE IF EXISTS sysproc; CREATE VIRTUAL TABLE sysproc USING processsource()")
-    cursor.execute("DROP TABLE IF EXISTS listening_ports; CREATE VIRTUAL TABLE listening_ports USING portssource()")
+    cursor.execute("CREATE VIRTUAL TABLE sysproc USING processsource()")
+    cursor.execute("CREATE VIRTUAL TABLE listening_ports USING portssource()")
 
     for row in cursor.execute("SELECT * from sysproc limit 10"):
         print row
